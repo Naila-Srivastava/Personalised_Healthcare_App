@@ -6,9 +6,9 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # Load trained model and preprocessor
-model = joblib.load("health_model.pkl")
-preprocessor = joblib.load("preprocessor.pkl")
-feature_names = joblib.load("feature_names.pkl") 
+model = joblib.load("models/health_model.pkl")
+preprocessor = joblib.load("models/preprocessor.pkl")
+feature_names = joblib.load("models/feature_names.pkl")
 
 # Recommendation logic
 def generate_recommendations(prediction):
