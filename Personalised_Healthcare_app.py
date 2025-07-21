@@ -54,12 +54,31 @@ user_data = pd.DataFrame({
 st.subheader("Your Input Summary")
 st.table(user_data)
 
+# Prediction Button 
 if st.button("Predict Health Risk"):
-    # Preprocess & predict
-    X_input = preprocessor.transform(user_data)
+    # Convert user inputs to DataFrame
+    user_data_df = pd.DataFrame([user_data])
+
+    # Load feature names from training
+    feature_names = joblib.load("models/feature_names.pkl")
+
+    # Ensure all columns exist 
+    user_data_full = pd.DataFrame(columns=feature_names)
+    user_data_full.loc[0] = 0 
+
+    # Update with actual user input values
+    for col in user_data_df.columns:
+        if col in user_data_full.columns:
+            user_data_full[col] = user_data_df[col].values[0]
+
+    # Apply preprocessor
+    X_input = preprocessor.transform(user_data_full)
+
+    # Predict
     prediction = model.predict(X_input)[0]
 
     st.subheader(f"Predicted Risk Level: **{prediction}**")
+
     st.write("### Personalized Recommendations:")
     for rec in generate_recommendations(prediction):
         st.write(f"- {rec}")
