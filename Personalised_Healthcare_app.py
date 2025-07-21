@@ -56,8 +56,11 @@ st.table(user_data)
 
 # Prediction Button 
 if st.button("Predict Health Risk"):
-    user_data_flat = np.array(user_data).flatten()  # Ensure it's 1D
-    user_data_df = pd.DataFrame([user_data_flat], columns=feature_names)
+    user_data_df = pd.DataFrame([user_data])  # Only 5 columns, same as input features
+    
+    # Apply preprocessor
+    X_input = preprocessor.transform(user_data_df)
+    prediction = model.predict(X_input)[0]
 
     # Load feature names from training
     feature_names = joblib.load("models/feature_names.pkl")
