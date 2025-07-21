@@ -150,4 +150,10 @@ Personalized-Healthcare-Recommendations/
 ├── personalised_data.csv                      # Folder for the dataset (if any)
 ├── Data_analysis.ipynb                        # Data analysis, visualization and ML pipeline script
 ├── charts/                                    # Folder for all generated plots
+├── models/                                    # Folder for trained models
+│   ├── Model_README.md
+│   ├── health_model.pkl
+│   ├── preprocessor.pkl
+│   └── feature_names.pkl
+├── train_model.py                             # Script to train and save model
 └── Personalised_healthcare_app.py             # Streamlit dashboard script
