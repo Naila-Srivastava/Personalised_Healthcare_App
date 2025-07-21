@@ -15,8 +15,8 @@ Building a machine learning pipeline to assess individual health risks and provi
 
 ## 🔧 Tools & Technologies
 
-* **Python** (Pandas, NumPy, Matplotlib, Seaborn, SciPy, Scikit-Learn, XGBoost)
-* **Streamlit** – For building the interactive dashboard
+* **Python** (Pandas, NumPy, Matplotlib, Seaborn, SciPy, Scikit-Learn and XGBoost)
+* **Streamlit** – For building the interactive dashboard and app
 * **Jupyter Notebook** – For data analysis and EDA
 * **Joblib** – For saving and loading model artifacts
 * **Git & GitHub** – Version control and collaboration
@@ -71,7 +71,7 @@ Building a machine learning pipeline to assess individual health risks and provi
 | Random Forest | 1.00     | 1.00      | 1.00   | 1.00     |
 | XGBoost       | 1.00     | 1.00      | 1.00   | 1.00     |
 
-> ** All the models have the same accuracy, because:
+> Note:- **All the models have the same accuracy, because:
 > Perfect class separation 
 > The dataset is too clean/simple, with no noise
 > The target variable is heavily correlated with one or two main features, so all models are learning the same obvious thing.**
@@ -142,7 +142,7 @@ Pre-trained model and preprocessor files are available in the `/models` director
 
 ## 📂 Project Structure
 
-```plaintext```
+```plaintext
 Personalized-Healthcare-Recommendations/
 │
 ├── README.md                                  # You're reading this now
