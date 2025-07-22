@@ -56,7 +56,13 @@ st.table(user_data)
 
 # Prediction Button 
 if st.button("Predict Health Risk"):
-    user_data_df = pd.DataFrame([user_data])  # Only 5 columns, same as input features
+    if isinstance(user_data, (list, tuple, np.ndarray)):
+        user_data_flat = np.array(user_data).flatten()
+    else:
+        user_data_flat = user_data
+
+# Convert to DataFrame (assuming we know the input columns)
+user_data_df = pd.DataFrame([user_data_flat], columns=input_columns)
     
     # Apply preprocessor
     X_input = preprocessor.transform(user_data_df)
