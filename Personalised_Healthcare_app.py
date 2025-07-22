@@ -73,6 +73,18 @@ if st.button("Predict Health Risk"):
     # Align columns with training features
     user_df = user_df.reindex(columns=feature_names, fill_value=0)
 
+    # Create empty dataframe with all required columns
+    template_df = pd.DataFrame(columns=feature_names)
+    template_df.loc[0] = 0  # Fill with zeros by default
+
+# Update only the columns we got from user input
+    for col, val in user_data.items():
+        if col in template_df.columns:
+            template_df[col] = val
+
+            # Final aligned dataframe
+            user_df = template_df
+
     # Transform input
     X_input = preprocessor.transform(user_df)
 
