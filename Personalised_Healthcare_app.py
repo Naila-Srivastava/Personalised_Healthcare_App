@@ -78,7 +78,7 @@ if st.button("Predict Health Risk"):
         if col in template_df.columns:
             template_df[col] = val
 
-    user_df = template_df  # ← assign outside loop
+    user_df = pd.DataFrame([user_data])
 
     # Preprocess
     X_input = preprocessor.transform(user_df)
