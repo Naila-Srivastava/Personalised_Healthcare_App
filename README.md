@@ -143,7 +143,7 @@ Pre-trained model and preprocessor files are available in the `/models` director
 ## 📂 Project Structure
 
 ```plaintext
-Personalized-Healthcare-Recommendations/
+Personalized-Healthcare-App/
 │
 ├── README.md                                  # You're reading this now
 ├── requirements.txt                           # Dependencies list
