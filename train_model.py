@@ -13,7 +13,14 @@ print(f"Dataset loaded: {df.shape}")
 
 # === 2. Define target and features ===
 target = 'Health_Risk' 
-X = df.drop(columns=[target])
+# Define columns we actually collect in the app
+required_cols = [
+    "Age", "Gender", "Systolic_BP", "Diastolic_BP", "Cholesterol",
+    "Glucose_Level", "BMI", "Smoking_Status", "Physical_Activity_Level",
+    "Alcohol_Consumption", "Sleep_Hours"
+]
+
+X = df[required_cols]
 y = df[target]
 
 # Separate numeric and categorical columns
