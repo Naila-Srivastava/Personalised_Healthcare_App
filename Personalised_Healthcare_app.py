@@ -67,38 +67,38 @@ def health_warnings(data):
 if st.button("Predict Health Risk"):
     health_warnings(user_data)
 
-    # Convert input to DataFrame
-    user_df = pd.DataFrame([user_data], columns=user_data.keys())
+    # Convert to DataFrame
+    user_df = pd.DataFrame([user_data])
 
-    # Align columns with training features
-    user_df = user_df.reindex(columns=feature_names, fill_value=0)
-
-    # Create empty dataframe with all required columns
+    # Create template and align
     template_df = pd.DataFrame(columns=feature_names)
-    template_df.loc[0] = 0  # Fill with zeros by default
+    template_df.loc[0] = 0
 
-# Update only the columns we got from user input
     for col, val in user_data.items():
         if col in template_df.columns:
             template_df[col] = val
 
-            # Final aligned dataframe
-            user_df = template_df
+    user_df = template_df  # ← assign outside loop
 
-    # Transform input
+    # Preprocess
     X_input = preprocessor.transform(user_df)
 
     # Predict
     prediction = model.predict(X_input)[0]
     st.subheader(f"**Predicted Risk Level: {prediction}**")
 
-    # ----------------- Visualization -----------------
+    # Visualization
     st.markdown("### 📊 Your Health Metrics Overview")
     radar_data = pd.DataFrame({
         "Metric": ["Systolic BP", "Diastolic BP", "Cholesterol", "Glucose", "BMI"],
         "Value": [systolic_bp, diastolic_bp, cholesterol, glucose, bmi],
         "Normal_Range": [120, 80, 200, 100, 25]
     })
-    fig = px.bar(radar_data, x="Metric", y="Value", color=(radar_data["Value"] > radar_data["Normal_Range"]),
-                 color_discrete_map={True: "red", False: "green"}, title="Health Metrics vs. Normal Ranges")
+    radar_data["Is_High"] = radar_data["Value"] > radar_data["Normal_Range"]
+
+    fig = px.bar(radar_data, x="Metric", y="Value", color="Is_High",
+                 color_discrete_map={True: "red", False: "green"},
+                 title="Health Metrics vs. Normal Ranges")
+
     st.plotly_chart(fig, use_container_width=True)
+
