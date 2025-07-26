@@ -1,57 +1,50 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, request, render_template
 import pandas as pd
 import joblib
-import numpy as np
+import os
 
 app = Flask(__name__)
 
-# Load ML components
-model = joblib.load("models/health_model.pkl")
-preprocessor = joblib.load("models/preprocessor.pkl")
-feature_names = joblib.load("models/feature_names.pkl")
+# Load your models
+model_path = os.path.join('models', 'health_model.pkl')
+model = joblib.load(model_path)
 
-@app.route("/", methods=["GET", "POST"])
-def home():
-    if request.method == "POST":
-        try:
-            # Collect input from form
-            data = {
-                "Age": int(request.form.get("age", 0)),
-                "Gender": request.form.get("gender", "Other"),
-                "Systolic_BP": float(request.form.get("systolic", 0)),
-                "Diastolic_BP": float(request.form.get("diastolic", 0)),
-                "Cholesterol": float(request.form.get("cholesterol", 0)),
-                "Glucose_Level": float(request.form.get("glucose", 0)),
-                "BMI": float(request.form.get("bmi", 0)),
-                "Smoking_Status": request.form.get("smoking", "Never"),
-                "Physical_Activity_Level": request.form.get("activity", "Low"),
-                "Alcohol_Consumption": request.form.get("alcohol", "None"),
-                "Sleep_Hours": float(request.form.get("sleep", 0)),
-            }
+# Required columns
+REQUIRED_COLUMNS = {
+    'Gender', 'Smoking_Status', 'Alcohol_Consumption', 'Physical_Activity_Level',
+    'Diet_Type', 'Sleep_Quality', 'Blood_Pressure',
+    'Heart_Disease_Risk', 'Diabetes_Risk',
+    'Exercise_Recommendation', 'Diet_Recommendation'
+}
 
-            # Health Warnings
-            warnings = []
-            if data["Systolic_BP"] > 140 or data["Diastolic_BP"] > 90:
-                warnings.append("⚠️ High Blood Pressure Detected.")
-            if data["Cholesterol"] > 240:
-                warnings.append("⚠️ High Cholesterol.")
-            if data["BMI"] > 30:
-                warnings.append("⚠️ Obesity Risk.")
-            if data["Glucose_Level"] > 180:
-                warnings.append("⚠️ High Blood Sugar.")
+@app.route('/')
+def index():
+    return render_template('index.html')
 
-            # Preprocess for model
-            df = pd.DataFrame([data])
-            df = df.reindex(columns=feature_names, fill_value=0)
-            transformed = preprocessor.transform(df)
-            prediction = model.predict(transformed)[0]
+@app.route('/predict', methods=['POST'])
+def predict():
+    if 'file' not in request.files:
+        return "No file uploaded!", 400
 
-            return render_template("result.html", prediction=prediction, warnings=warnings)
+    file = request.files['file']
+    if file.filename == '':
+        return "No file selected!", 400
 
-        except Exception as e:
-            return f"Something went wrong: {str(e)}"
+    try:
+        df = pd.read_csv(file)
+    except Exception as e:
+        return f"Failed to read CSV: {e}", 400
 
-    return render_template("index.html")
+    # Check for required columns
+    missing_cols = REQUIRED_COLUMNS - set(df.columns)
+    if missing_cols:
+        return f"Missing required columns: {missing_cols}", 400
 
-if __name__ == "__main__":
+    # Proceed with prediction if all good
+    predictions = model.predict(df[REQUIRED_COLUMNS])
+    df['Prediction'] = predictions
+
+    return df.to_html(classes='table table-striped')
+
+if __name__ == '__main__':
     app.run(debug=True)
