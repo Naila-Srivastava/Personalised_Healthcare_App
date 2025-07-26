@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Personalized Health Risk</title>
+</head>
+<body>
+    <h1>🩺 Personalized Healthcare Risk Prediction</h1>
+    <form method="post">
+        Age: <input type="number" name="age"><br>
+        Gender: <select name="gender">
+            <option>Male</option><option>Female</option><option>Other</option></select><br>
+        Systolic BP: <input type="number" name="systolic"><br>
+        Diastolic BP: <input type="number" name="diastolic"><br>
+        Cholesterol: <input type="number" name="cholesterol"><br>
+        Glucose Level: <input type="number" name="glucose"><br>
+        BMI: <input type="number" step="0.1" name="bmi"><br>
+        Smoking Status: <select name="smoking">
+            <option>Never</option><option>Former</option><option>Current</option></select><br>
+        Physical Activity: <select name="activity">
+            <option>Low</option><option>Moderate</option><option>High</option></select><br>
+        Alcohol Consumption: <select name="alcohol">
+            <option>None</option><option>Low</option><option>Moderate</option><option>High</option></select><br>
+        Sleep Hours: <input type="number" step="0.5" name="sleep"><br>
+        <input type="submit" value="Predict">
+    </form>
+
+    {% if prediction %}
+        <h2>Predicted Health Risk Level: {{ prediction }}</h2>
+    {% endif %}
+
+    {% for w in warnings %}
+        <p style="color:red;">{{ w }}</p>
+    {% endfor %}
+</body>
+</html>
