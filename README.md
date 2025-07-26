@@ -1,6 +1,6 @@
 # Personalized Healthcare Recommendations
 
-Building a machine learning pipeline to assess individual health risks and provide **personalized lifestyle and healthcare recommendations**, deployed via a clean Streamlit dashboard.
+Building a machine learning pipeline to assess individual health risks and provide **personalized lifestyle and healthcare recommendations**, deployed via a clean Flask dashboard.
 
 ---
 
@@ -9,7 +9,7 @@ Building a machine learning pipeline to assess individual health risks and provi
 * Analyze and visualize health-related indicators (age, BMI, lifestyle factors, etc.).
 * Build and evaluate multiple Machine Learning models for **risk level classification (Low, Moderate, High)**.
 * Generate actionable, personalized healthcare recommendations.
-* Deploy an **interactive Streamlit app** for real-time prediction and visualization.
+* Deploy an **interactive Flask app** for real-time prediction and visualization.
 
 ---
 
@@ -39,7 +39,7 @@ Building a machine learning pipeline to assess individual health risks and provi
 3. Run the notebooks:
    * `EDA_Healthcare.ipynb` for data exploration and visualization.
    * `ML_Healthcare.ipynb` for machine learning pipeline and training.
-4. Launch the Streamlit app: `streamlit run app.py`
+4. Launch the Flask app: ``
    
 ---
 
@@ -95,14 +95,14 @@ Building a machine learning pipeline to assess individual health risks and provi
 
 ---
 
-## 🌍 Streamlit Dashboard Features
+## 🌍 Flask Dashboard Features
 
 * User-friendly input panel for entering health data.
 * Real-time prediction of risk category (Low/Moderate/High).
 * Personalized healthcare recommendations (exercise, diet, monitoring).
 * Visual display of **feature importance** for interpretability.
 
-👉 **Check out the Streamlit app (add link after deployment).**[ ]
+👉 **Check out the Flask app (add link after deployment).**[ ]
 
 ---
 
@@ -135,7 +135,6 @@ Pre-trained model and preprocessor files are available in the `/models` director
 
 ## 🙌 Acknowledgments
 
-* Thanks to Streamlit community for making model deployment seamless.
 * This project was completed as part of an This project was completed as part of a 12-week Upskilling Sprint (Data Analyst Internship), focused on healthcare analytics.
 
 ---
@@ -147,7 +146,9 @@ Personalized_Healthcare_App/
 │
 ├── README.md                                  # You're reading this now
 ├── requirements.txt                           # Dependencies list
-├── personalised_data.csv                      # Folder for the dataset (if any)
+├── personalised_data.csv                      # The dataset
+├── index.html                                 # UI script
+├── result.html                                # Display script
 ├── Data_analysis.ipynb                        # Data analysis, visualization and ML pipeline script
 ├── charts/                                    # Folder for all generated plots
 ├── models/                                    # Folder for trained models
@@ -156,4 +157,4 @@ Personalized_Healthcare_App/
 │   ├── preprocessor.pkl
 │   └── feature_names.pkl
 ├── train_model.py                             # Script to train and save model
-└── Personalised_healthcare_app.py             # Streamlit dashboard script
+└── app.py                                     # Flask app deployment script
