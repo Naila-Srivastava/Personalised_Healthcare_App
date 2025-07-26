@@ -16,7 +16,7 @@ Building a machine learning pipeline to assess individual health risks and provi
 ## 🔧 Tools & Technologies
 
 * **Python** (Pandas, NumPy, Matplotlib, Seaborn, SciPy, Scikit-Learn and XGBoost)
-* **Streamlit** – For building the interactive dashboard and app
+* **Flask** – For building the interactive app
 * **Jupyter Notebook** – For data analysis and EDA
 * **Joblib** – For saving and loading model artifacts
 * **Git & GitHub** – Version control and collaboration
@@ -36,9 +36,8 @@ Building a machine learning pipeline to assess individual health risks and provi
 
 1. Clone the repository.
 2. Install dependencies: `pip install -r requirements.txt`
-3. Run the notebooks:
-   * `EDA_Healthcare.ipynb` for data exploration and visualization.
-   * `ML_Healthcare.ipynb` for machine learning pipeline and training.
+3. Run the notebook:
+   * `Data_analysis.ipynb` for EDA, Machine learning and visualization.
 4. Launch the Flask app: ``
    
 ---
@@ -147,8 +146,6 @@ Personalized_Healthcare_App/
 ├── README.md                                  # You're reading this now
 ├── requirements.txt                           # Dependencies list
 ├── personalised_data.csv                      # The dataset
-├── index.html                                 # UI script
-├── result.html                                # Display script
 ├── Data_analysis.ipynb                        # Data analysis, visualization and ML pipeline script
 ├── charts/                                    # Folder for all generated plots
 ├── models/                                    # Folder for trained models
@@ -156,5 +153,8 @@ Personalized_Healthcare_App/
 │   ├── health_model.pkl
 │   ├── preprocessor.pkl
 │   └── feature_names.pkl
+├── templates/                                 # Folder for templates
+│   ├── index.html
+│   ├── result.html
 ├── train_model.py                             # Script to train and save model
 └── app.py                                     # Flask app deployment script
