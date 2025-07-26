@@ -156,5 +156,6 @@ Personalized_Healthcare_App/
 ├── templates/                                 # Folder for templates
 │   ├── index.html
 │   ├── result.html
+├── Procfile                                  
 ├── train_model.py                             # Script to train and save model
 └── app.py                                     # Flask app deployment script
