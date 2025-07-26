@@ -1,104 +1,57 @@
-import streamlit as st
+from flask import Flask, render_template, request
 import pandas as pd
-import numpy as np
 import joblib
-import plotly.express as px
+import numpy as np
 
-# ----------------- Load model & preprocessor -----------------
-MODEL_PATH = "models/health_model.pkl"
-PREPROC_PATH = "models/preprocessor.pkl"
-FEAT_NAMES_PATH = "models/feature_names.pkl"
+app = Flask(__name__)
 
-model = joblib.load(MODEL_PATH)
-preprocessor = joblib.load(PREPROC_PATH)
-feature_names = joblib.load(FEAT_NAMES_PATH)
+# Load models
+model = joblib.load("models/health_model.pkl")
+preprocessor = joblib.load("models/preprocessor.pkl")
+feature_names = joblib.load("models/feature_names.pkl")
 
-st.set_page_config(page_title="Personalised Healthcare App", layout="wide")
-st.title("🩺 Personalised Healthcare Risk Prediction")
+@app.route("/", methods=["GET", "POST"])
+def home():
+    prediction = None
+    warnings = []
 
-st.markdown("Provide your health parameters and get a real-time prediction with risk insights and visualizations.")
+    if request.method == "POST":
+        # Grab form data
+        data = {
+            "Age": int(request.form["age"]),
+            "Gender": request.form["gender"],
+            "Systolic_BP": float(request.form["systolic"]),
+            "Diastolic_BP": float(request.form["diastolic"]),
+            "Cholesterol": float(request.form["cholesterol"]),
+            "Glucose_Level": float(request.form["glucose"]),
+            "BMI": float(request.form["bmi"]),
+            "Smoking_Status": request.form["smoking"],
+            "Physical_Activity_Level": request.form["activity"],
+            "Alcohol_Consumption": request.form["alcohol"],
+            "Sleep_Hours": float(request.form["sleep"])
+        }
 
-# ----------------- User Inputs -----------------
-col1, col2, col3 = st.columns(3)
+        # Health warnings
+        if data["Systolic_BP"] > 140 or data["Diastolic_BP"] > 90:
+            warnings.append("⚠️ High Blood Pressure Detected.")
+        if data["Cholesterol"] > 240:
+            warnings.append("⚠️ High Cholesterol.")
+        if data["BMI"] > 30:
+            warnings.append("⚠️ Obesity Risk.")
+        if data["Glucose_Level"] > 180:
+            warnings.append("⚠️ High Blood Sugar.")
 
-with col1:
-    age = st.number_input("Age", 1, 100, 30)
-    gender = st.selectbox("Gender", ["Male", "Female", "Other"])
-    systolic_bp = st.number_input("Systolic BP (mmHg)", 80, 200, 120)
-    diastolic_bp = st.number_input("Diastolic BP (mmHg)", 50, 130, 80)
+        # Create DataFrame
+        input_df = pd.DataFrame([data])
 
-with col2:
-    cholesterol = st.number_input("Cholesterol (mg/dL)", 100, 400, 190)
-    glucose = st.number_input("Glucose Level (mg/dL)", 50, 400, 100)
-    bmi = st.number_input("BMI", 10.0, 60.0, 24.0, step=0.1)
-    smoking_status = st.selectbox("Smoking Status", ["Never", "Former", "Current"])
+        # Reindex to feature list
+        input_df = input_df.reindex(columns=feature_names, fill_value=0)
 
-with col3:
-    physical_activity = st.selectbox("Physical Activity Level", ["Low", "Moderate", "High"])
-    alcohol = st.selectbox("Alcohol Consumption", ["None", "Low", "Moderate", "High"])
-    sleep_hours = st.slider("Average Sleep Hours", 3, 12, 7)
+        # Transform and predict
+        X = preprocessor.transform(input_df)
+        prediction = model.predict(X)[0]
 
-user_data = {
-    "Age": age,
-    "Gender": gender,
-    "Systolic_BP": systolic_bp,
-    "Diastolic_BP": diastolic_bp,
-    "Cholesterol": cholesterol,
-    "Glucose_Level": glucose,
-    "BMI": bmi,
-    "Smoking_Status": smoking_status,
-    "Physical_Activity_Level": physical_activity,
-    "Alcohol_Consumption": alcohol,
-    "Sleep_Hours": sleep_hours
-}
+    return render_template("index.html", prediction=prediction, warnings=warnings)
 
-# ----------------- Health Warnings -----------------
-def health_warnings(data):
-    if data["Systolic_BP"] > 140 or data["Diastolic_BP"] > 90:
-        st.warning("⚠️ **High Blood Pressure Detected** - Consider consulting a doctor.")
-    if data["Cholesterol"] > 240:
-        st.warning("⚠️ **High Cholesterol** - Risk of cardiovascular issues.")
-    if data["BMI"] > 30:
-        st.warning("⚠️ **Obesity Risk** - BMI above 30.")
-    if data["Glucose_Level"] > 180:
-        st.warning("⚠️ **High Blood Sugar** - Possible diabetes risk.")
-
-# ----------------- Prediction -----------------
-if st.button("Predict Health Risk"):
-    health_warnings(user_data)
-
-    # Convert to DataFrame
-    user_df = pd.DataFrame([user_data])
-
-    # Create template and align
-    template_df = pd.DataFrame(columns=feature_names)
-    template_df.loc[0] = 0
-
-    for col, val in user_data.items():
-        if col in template_df.columns:
-            template_df[col] = val
-
-    user_df = pd.DataFrame([user_data])
-
-    # Preprocess
-    X_input = preprocessor.transform(user_df)
-
-    # Predict
-    prediction = model.predict(X_input)[0]
-    st.subheader(f"**Predicted Risk Level: {prediction}**")
-
-    # Visualization
-    st.markdown("### 📊 Your Health Metrics Overview")
-    radar_data = pd.DataFrame({
-        "Metric": ["Systolic BP", "Diastolic BP", "Cholesterol", "Glucose", "BMI"],
-        "Value": [systolic_bp, diastolic_bp, cholesterol, glucose, bmi],
-        "Normal_Range": [120, 80, 200, 100, 25]
-    })
-    radar_data["Is_High"] = radar_data["Value"] > radar_data["Normal_Range"]
-
-    fig = px.bar(radar_data, x="Metric", y="Value", color="Is_High",
-                 color_discrete_map={True: "red", False: "green"},
-                 title="Health Metrics vs. Normal Ranges")
-
-    st.plotly_chart(fig, use_container_width=True)
-
+if __name__ == "__main__":
+    app.run(debug=True)
