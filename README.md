@@ -101,7 +101,7 @@ Building a machine learning pipeline to assess individual health risks and provi
 * Personalized healthcare recommendations (exercise, diet, monitoring).
 * Visual display of **feature importance** for interpretability.
 
-👉 **Check out the Flask app (add link after deployment).**[ ]
+👉 [Check out the Flask app](https://personalised-healthcare-app.onrender.com))
 
 ---
 
