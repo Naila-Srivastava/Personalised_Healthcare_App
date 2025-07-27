@@ -1,38 +1,45 @@
 from flask import Flask, render_template, request
 import pandas as pd
 import joblib
-import os
 
 app = Flask(__name__)
-model = joblib.load("model/life_expectancy_model.pkl")
 
-@app.route('/')
+# Load the trained model
+model = joblib.load("health_model.pkl")
+
+@app.route("/")
 def index():
-    return render_template('index.html')
+    return render_template("index.html")
 
-@app.route('/predict', methods=['POST'])
+@app.route("/predict", methods=["POST"])
 def predict():
-    if 'file' not in request.files:
+    if "file" not in request.files:
         return "No file uploaded", 400
 
-    file = request.files['file']
-    if file.filename == '':
-        return "No selected file", 400
+    file = request.files["file"]
 
-    df = pd.read_csv(file)
-    required_columns = {'Gender','Smoking_Status','Alcohol_Consumption','Physical_Activity_Level',
-                        'Diet_Type','Blood_Pressure','Sleep_Quality','Diabetes_Risk',
-                        'Heart_Disease_Risk','Exercise_Recommendation','Diet_Recommendation'}
+    if file.filename == "":
+        return "Empty filename", 400
 
-    if not required_columns.issubset(df.columns):
+    try:
+        df = pd.read_csv(file)
+
+        # Define required columns
+        required_columns = {'Age', 'Gender', 'Smoking_Status', 'Alcohol_Consumption',
+                            'Physical_Activity_Level', 'Sleep_Quality', 'Blood_Pressure'}
+
+        # Check for missing columns
         missing = required_columns - set(df.columns)
-        return f"Missing columns: {missing}", 400
+        if missing:
+            return f"Missing columns: {missing}", 400
 
-    predictions = model.predict(df)
-    df['Predicted_Life_Expectancy'] = predictions
-    results = df[['Gender', 'Predicted_Life_Expectancy']]
+        # Predict and append results
+        df["Health_Risk_Prediction"] = model.predict(df)
 
-    return render_template('result.html', tables=[results.to_html(classes='table table-bordered', index=False)])
+        return render_template("result.html", tables=[df.to_html(classes="table table-bordered", index=False)])
+    
+    except Exception as e:
+        return f"Error processing file: {str(e)}", 500
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(debug=True)
