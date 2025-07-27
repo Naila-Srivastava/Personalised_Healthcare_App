@@ -1,107 +1,26 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Personalized Health Risk</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            padding: 2rem;
-            background: #f8f9fa;
-        }
-        .form-container {
-            max-width: 600px;
-            margin: auto;
-            background: #ffffff;
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Upload Patient Data</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-    <div class="form-container">
-        <h1>🩺 Health Risk Predictor</h1>
-        <form method="post">
-            <div class="mb-3">
-                <label>Age</label>
-                <input type="number" name="age" class="form-control" placeholder="Enter your age" required>
-            </div>
+<body class="bg-light">
 
-            <div class="mb-3">
-                <label>Gender</label>
-                <select name="gender" class="form-select" required>
-                    <option>Male</option>
-                    <option>Female</option>
-                    <option>Other</option>
-                </select>
-            </div>
-
-            <div class="mb-3">
-                <label>Systolic Blood Pressure</label>
-                <input type="number" name="systolic" class="form-control" placeholder="e.g., 120" required>
-            </div>
-
-            <div class="mb-3">
-                <label>Diastolic Blood Pressure</label>
-                <input type="number" name="diastolic" class="form-control" placeholder="e.g., 80" required>
-            </div>
-
-            <div class="mb-3">
-                <label>Cholesterol Level</label>
-                <input type="number" name="cholesterol" class="form-control" placeholder="e.g., 200" required>
-            </div>
-
-            <div class="mb-3">
-                <label>Glucose Level</label>
-                <input type="number" name="glucose" class="form-control" placeholder="e.g., 100" required>
-            </div>
-
-            <div class="mb-3">
-                <label>BMI</label>
-                <input type="number" step="0.1" name="bmi" class="form-control" placeholder="e.g., 22.5" required>
-            </div>
-
-            <div class="mb-3">
-                <label>Smoking Status</label>
-                <select name="smoking" class="form-select" required>
-                    <option>Never</option>
-                    <option>Former</option>
-                    <option>Current</option>
-                </select>
-            </div>
-
-            <div class="mb-3">
-                <label>Physical Activity Level</label>
-                <select name="activity" class="form-select" required>
-                    <option>Low</option>
-                    <option>Moderate</option>
-                    <option>High</option>
-                </select>
-            </div>
-
-            <div class="mb-3">
-                <label>Alcohol Consumption</label>
-                <select name="alcohol" class="form-select" required>
-                    <option>None</option>
-                    <option>Low</option>
-                    <option>Moderate</option>
-                    <option>High</option>
-                </select>
-            </div>
-
-            <div class="mb-3">
-                <label>Sleep Hours</label>
-                <input type="number" step="0.5" name="sleep" class="form-control" placeholder="e.g., 7.5" required>
-            </div>
-
-            <div class="text-center">
-                <button type="submit" class="btn btn-primary">Predict Risk</button>
-            </div>
-        </form>
+  <div class="container mt-5">
+    <div class="text-center">
+      <h1 class="mb-4">🩺 Personalised Healthcare Recommendations</h1>
+      <p class="text-muted">Upload your CSV file to get instant insights!</p>
     </div>
+
+    <form action="/predict" method="post" enctype="multipart/form-data" class="shadow p-4 bg-white rounded">
+      <div class="mb-3">
+        <label for="file" class="form-label">Upload CSV file</label>
+        <input class="form-control" type="file" name="file" id="file" required>
+      </div>
+      <button type="submit" class="btn btn-primary w-100">Predict Health Risk</button>
+    </form>
+  </div>
+
 </body>
 </html>
